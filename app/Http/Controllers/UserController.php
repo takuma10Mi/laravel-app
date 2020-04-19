@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Auth; # 追加
-
+use App\Http\Requests\UserRequest; # 追加
 class UserController extends Controller
 {
     public function  signin(){
@@ -15,7 +15,7 @@ class UserController extends Controller
     /**
      * ログイン処理アクション
      */
-    public function login(Request $request)
+    public function login(UserRequest $request)
     {
         $email    = $request->input('email');
         $password = $request->input('password');
@@ -25,5 +25,13 @@ class UserController extends Controller
         }
         // 認証成功
         return redirect()->route('micropost.index');
+    }
+    /**
+     * ログアウト処理アクション
+    */
+    public function logout()
+    {
+    Auth::logout();
+    return redirect()->route('user.signin');
     }
 }
