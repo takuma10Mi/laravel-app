@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Auth; # 追加
 use App\Http\Requests\UserRequest; # 追加
+use App\User; # 追加
+use Hash; # 追加
 class UserController extends Controller
 {
     public function  signin(){
@@ -33,5 +35,32 @@ class UserController extends Controller
     {
     Auth::logout();
     return redirect()->route('user.signin');
+}
+    public function create()
+    {
+    return view('user.create');
+    }
+    /**
+   * ユーザ登録処理アクション
+   */
+    public function store(Request $request)
+    {
+        $user     = new User;
+        $name     = $request->input('name');
+        $email    = $request->input('email');
+        $password = $request->input('password');
+        $params   = [
+        'name'      => $name,
+        'email'     => $email,
+        'password'  => Hash::make($password),
+        ];
+        // ユーザの保存に失敗した時の処理をif文内に記述,fillは値を確認する。
+        if (!$user->fill($params)->save()) {
+        return redirect()->route('user.create')->with('error_message', 'User registration failed');
+        }
+        if (!Auth::attempt(['email' => $email, 'password' => $password])) {
+        return redirect()->route('user.signin')->with('error_message', 'I failed to login');
+        }
+        return redirect()->route('micropost.index');
     }
 }
