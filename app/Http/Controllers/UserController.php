@@ -15,7 +15,7 @@ class UserController extends Controller
     /**
      * ログイン処理アクション
      */
-    public function login(UserRequest $request)
+    public function login(Request $request)
     {
         $email    = $request->input('email');
         $password = $request->input('password');
@@ -26,12 +26,4 @@ class UserController extends Controller
         // 認証成功
         return redirect()->route('micropost.index');
     }
-            /**
-         * ログアウト処理アクション
-        */
-        public function logout()
-        {
-        Auth::logout();
-        return redirect()->route('user.signin');
-        }
 }
