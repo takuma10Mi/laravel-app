@@ -37,5 +37,15 @@ class User extends Authenticatable
         $isRegist = $this->fill($params)->save();
         return $isRegist;
     }
+
+    protected static function boot() 
+    {
+        parent::boot();
+        static::deleting(function($model) {
+            foreach ($model->microposts()->get() as $child) {
+                $child->delete();
+            }
+        });
+    }
 }
 
